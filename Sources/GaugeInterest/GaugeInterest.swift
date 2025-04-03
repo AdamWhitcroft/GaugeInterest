@@ -3,8 +3,8 @@ import Foundation
 /// MARK: - GaugeInterest
 public struct GaugeInterest {
     
-    /// The base URL for the tracking server
-    private static let baseURL = URL(string: "http://localhost:3000/track/")!
+    /// Configure GaugeInterest endpoint
+    public static var baseURL: URL = URL(string: "https://example.com/track/")!
     
     /// Track a button tap event
     /// - Parameters:
