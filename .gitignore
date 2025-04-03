@@ -1,0 +1,10 @@
+# Swift
+.build/
+Packages/
+.swiftpm/
+.DS_Store
+xcuserdata/
+DerivedData/
+.idea/
+*.xcodeproj/*
+*.xcworkspace/*
