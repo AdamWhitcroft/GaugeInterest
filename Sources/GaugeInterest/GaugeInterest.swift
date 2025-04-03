@@ -4,7 +4,7 @@ import Foundation
 public struct GaugeInterest {
     
     /// The base URL for the tracking server
-    private static let baseURL = URL(string: "https://your-api.com/track/")!
+    private static let baseURL = URL(string: "http://localhost:3000/track/")!
     
     /// Track a button tap event
     /// - Parameters:
