@@ -28,6 +28,8 @@ public enum GaugeInterest {
             return
         }
 
+        print("[GaugeInterest] Using API key:", apiKey)
+
         let url = supabaseURL.appendingPathComponent("/rest/v1/rpc/track_event")
 
         var request = URLRequest(url: url)
