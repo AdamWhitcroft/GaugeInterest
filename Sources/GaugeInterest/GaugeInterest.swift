@@ -19,7 +19,7 @@ public struct GaugeInterest {
     ///   - completion: Optional result callback (success = true/false)
     public static func track(_ eventSlug: String, completion: ((Bool) -> Void)? = nil) {
         let url = supabaseURL.appendingPathComponent("/rest/v1/event_hits")
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -28,8 +28,20 @@ public struct GaugeInterest {
 
         let body: [String: String] = ["event_slug": eventSlug]
         request.httpBody = try? JSONEncoder().encode(body)
-        
-        URLSession.shared.dataTask(with: request) { _, response, error in
+
+        print("[GaugeInterest] Sending tap for: \(eventSlug)")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let http = response as? HTTPURLResponse {
+                print("[GaugeInterest] Status code:", http.statusCode)
+            }
+            if let error = error {
+                print("[GaugeInterest] Error:", error.localizedDescription)
+            }
+            if let data = data, let body = String(data: data, encoding: .utf8) {
+                print("[GaugeInterest] Response body:", body)
+            }
+
             let success = (response as? HTTPURLResponse)?.statusCode == 201 && error == nil
             DispatchQueue.main.async {
                 completion?(success)
