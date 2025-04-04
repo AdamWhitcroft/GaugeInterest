@@ -15,19 +15,19 @@ import GaugeInterest
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("Are you interested?")
-            
             Button {
-                GaugeInterest.baseURL = URL(string: "your-event-string-here")!
-
-                GaugeInterest.track("test-button") { success in
-                    print("Status: \(success)")
+                GaugeInterest.track("cookie-don-fcdm") { success in
+                    if success {
+                        print("✅ Tap registered")
+                    } else {
+                        print("❌ Failed to register tap")
+                    }
                 }
             } label: {
-                Text("Press Me")
+                Text("Push me")
             }
         }
+        .padding()
     }
 }
-
 ```
