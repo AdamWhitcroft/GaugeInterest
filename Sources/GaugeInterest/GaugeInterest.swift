@@ -38,7 +38,11 @@ public enum GaugeInterest {
         request.setValue(apiKey, forHTTPHeaderField: "apikey")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
-        let body: [String: String] = ["slug": eventSlug]
+        let body: [String: String] = [
+            "slug": eventSlug,
+            "api_key": apiKey
+        ]
+        
         request.httpBody = try? JSONEncoder().encode(body)
 
         print("[GaugeInterest] Tracking event for slug:", eventSlug)
