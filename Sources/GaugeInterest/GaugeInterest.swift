@@ -39,10 +39,10 @@ public enum GaugeInterest {
         request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
-        let body: [String: String] = [
-            "slug": eventSlug,
-            "api_key_param": apiKey
-        ]
+let body: [String: String] = [
+    "api_key_param": apiKey,
+    "slug_param": eventSlug
+]
 
         request.httpBody = try? JSONEncoder().encode(body)
 
