@@ -24,7 +24,9 @@ public struct GaugeInterest {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(anonKey)", forHTTPHeaderField: "Authorization")
+        request.setValue(anonKey, forHTTPHeaderField: "apikey")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
+
 
         let body: [String: String] = ["event_slug": eventSlug]
         request.httpBody = try? JSONEncoder().encode(body)
