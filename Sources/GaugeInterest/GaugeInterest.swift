@@ -39,10 +39,10 @@ public enum GaugeInterest {
         request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
-let body: [String: String] = [
-    "api_key_param": apiKey,
-    "slug_param": eventSlug
-]
+        let body: [String: String] = [
+            "api_key_param": apiKey,
+            "slug_param": eventSlug
+        ]
 
         request.httpBody = try? JSONEncoder().encode(body)
 
@@ -59,7 +59,10 @@ let body: [String: String] = [
                 print("[GaugeInterest] Response body:", body)
             }
 
-            let success = (response as? HTTPURLResponse)?.statusCode == 201 && error == nil
+            // ✅ Accept 200, 201, and 204 as success
+            let statusCode = (response as? HTTPURLResponse)?.statusCode
+            let success = [200, 201, 204].contains(statusCode) && error == nil
+
             DispatchQueue.main.async {
                 completion?(success)
             }
