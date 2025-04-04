@@ -41,7 +41,7 @@ public enum GaugeInterest {
 
         let body: [String: String] = [
             "slug": eventSlug,
-            "api_key": apiKey
+            "api_key_param": apiKey
         ]
 
         request.httpBody = try? JSONEncoder().encode(body)
