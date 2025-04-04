@@ -12,22 +12,32 @@ A lightweight event tracking Swift package that respects privacy and retains com
 import SwiftUI
 import GaugeInterest
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Button {
-                GaugeInterest.track("cookie-don-fcdm") { success in
-                    if success {
-                        print("✅ Tap registered")
-                    } else {
-                        print("❌ Failed to register tap")
-                    }
-                }
-            } label: {
-                Text("Push me")
-            }
+@main
+struct MyApp: App {
+    init() {
+        GaugeInterest.configure(apiKey: "user-api-key-abc123")
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
         }
-        .padding()
+    }
+}
+```
+
+And to track:
+
+```
+GaugeInterest.track("YOUR-EVENT-SLUG")
+```
+
+There's also a callback for successful event logging:
+
+```
+GaugeInterest.track("YOUR-EVENT-SLUG") { success in
+    if success {
+        print("Success")
     }
 }
 ```

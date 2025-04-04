@@ -1,37 +1,47 @@
 import Foundation
 
 /// MARK: - GaugeInterest
-public struct GaugeInterest {
-    
-    // MARK: - Internal Constants
-    
-    /// 🔐 Your Supabase project URL (hardcoded)
-    private static let supabaseURL = URL(string: "https://hhwvinjccespcliewifd.supabase.co")!
-    
-    /// 🔐 Your Supabase anon public key (hardcoded)
-    private static let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhod3ZpbmpjY2VzcGNsaWV3aWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM3MjQ1NzEsImV4cCI6MjA1OTMwMDU3MX0.pNDC5Z2qGjFKZhsBE4Yi-Mzkc2ZzHgPxWlvAMT2I3C0"
+public enum GaugeInterest {
 
-    // MARK: - Public API
+    // MARK: - Internal Constants
+
+    /// 🔐 Supabase project URL
+    private static let supabaseURL = URL(string: "https://hhwvinjccespcliewifd.supabase.co")!
+
+    // MARK: - Configurable State
+
+    /// 🔐 Developer's private API key
+    private static var apiKey: String?
+
+    /// Configure with a developer-specific API key
+    public static func configure(apiKey: String) {
+        self.apiKey = apiKey
+    }
 
     /// Tracks a tap on an event by slug
     /// - Parameters:
     ///   - eventSlug: The unique event slug (e.g. "home-button")
     ///   - completion: Optional result callback (success = true/false)
     public static func track(_ eventSlug: String, completion: ((Bool) -> Void)? = nil) {
-        let url = supabaseURL.appendingPathComponent("/rest/v1/event_hits")
+        guard let apiKey else {
+            print("[GaugeInterest] Error: No API key set. Did you call configure(apiKey:)?")
+            completion?(false)
+            return
+        }
+
+        let url = supabaseURL.appendingPathComponent("/rest/v1/rpc/track_event")
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(anonKey)", forHTTPHeaderField: "Authorization")
-        request.setValue(anonKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue(apiKey, forHTTPHeaderField: "apikey")
         request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
-
-        let body: [String: String] = ["event_slug": eventSlug]
+        let body: [String: String] = ["slug": eventSlug]
         request.httpBody = try? JSONEncoder().encode(body)
 
-        print("[GaugeInterest] Sending tap for: \(eventSlug)")
+        print("[GaugeInterest] Tracking event for slug:", eventSlug)
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let http = response as? HTTPURLResponse {
