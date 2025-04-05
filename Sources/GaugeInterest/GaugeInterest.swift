@@ -37,7 +37,6 @@ public enum GaugeInterest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(supabaseAnonKey)", forHTTPHeaderField: "Authorization")
         request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
-        request.setValue("return=minimal", forHTTPHeaderField: "Prefer")
 
         let body: [String: String] = [
             "api_key_param": apiKey,
@@ -49,23 +48,23 @@ public enum GaugeInterest {
         print("[GaugeInterest] Tracking event for slug:", eventSlug)
 
         URLSession.shared.dataTask(with: request) { data, response, error in
-            if let http = response as? HTTPURLResponse {
-                print("[GaugeInterest] Status code:", http.statusCode)
-            }
-            if let error = error {
-                print("[GaugeInterest] Error:", error.localizedDescription)
-            }
-            if let data = data, let body = String(data: data, encoding: .utf8) {
-                print("[GaugeInterest] Response body:", body)
-            }
+    if let http = response as? HTTPURLResponse {
+        print("[GaugeInterest] Status code:", http.statusCode)
+    }
+    if let error = error {
+        print("[GaugeInterest] Error:", error.localizedDescription)
+    }
+    if let data = data, let body = String(data: data, encoding: .utf8) {
+        print("[GaugeInterest] Response body:", body)
+    }
 
-            // ✅ Accept 200, 201, and 204 as success
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            let success = [200, 201, 204].contains(statusCode) && error == nil
+    let success = ((response as? HTTPURLResponse)?.statusCode == 200 || (response as? HTTPURLResponse)?.statusCode == 201)
+        && error == nil
 
-            DispatchQueue.main.async {
-                completion?(success)
-            }
-        }.resume()
+    DispatchQueue.main.async {
+        completion?(success)
+    }
+}.resume()
+
     }
 }
